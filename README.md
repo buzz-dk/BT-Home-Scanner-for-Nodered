@@ -53,7 +53,6 @@ Each message is a single line of JSON terminated by `\n`:
 5. Copy the executable to the .node-red folder (The executable is written to `x64\Release\Shelly_Data_Reader_Console.exe`)
 
 ## Usage (not necessary as the example Node-red flow starts the scanner at startup or deploy)
-> **Tip:** The supplied Node-RED example flow expects the compiled executable to be placed in the `.node-red` folder.
 
 ```
 Shelly_Data_Reader_Console.exe [host] [port]
@@ -75,7 +74,9 @@ Or import the supplied file: flows.json into Node-red
 These nodes need to be in the Node-red pallette:
 - flowfuse/node-red-dashboard
 - mschaeffler/node-red-bthome
-- node-red-contrib-markdown-note
+
+> **Tip:** The supplied Node-RED example flow expects the compiled executable to be placed in the `.node-red` folder.
+> The group that handles the background scanner can be removed, but the scanner must then be started manually
 
 ## How It Works
 
