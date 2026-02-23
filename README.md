@@ -43,6 +43,7 @@ Each message is a single line of JSON terminated by `\n`:
 | Build tools            | Visual Studio 2022 with C++ desktop workload |
 | C++ standard           | C++20                              |
 | Windows SDK            | 10.0                               |
+| BTHome sensor          | Shelly Blu H&T or similar          |
 
 ## Building
 
