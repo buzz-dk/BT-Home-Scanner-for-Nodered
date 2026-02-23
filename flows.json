@@ -1,0 +1,612 @@
+[
+    {
+        "id": "bc57bc05b329be6f",
+        "type": "tab",
+        "label": "BT Home",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "bbac731dc0c184a8",
+        "type": "tcp in",
+        "z": "bc57bc05b329be6f",
+        "name": "TCP From Scanner Process",
+        "server": "server",
+        "host": "",
+        "port": "5000",
+        "datamode": "stream",
+        "datatype": "utf8",
+        "newline": "",
+        "topic": "",
+        "trim": false,
+        "tls": "",
+        "x": 240,
+        "y": 160,
+        "wires": [
+            [
+                "5a79d81c1668c8bf"
+            ]
+        ]
+    },
+    {
+        "id": "5a79d81c1668c8bf",
+        "type": "json",
+        "z": "bc57bc05b329be6f",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 450,
+        "y": 160,
+        "wires": [
+            [
+                "3c0bb5c49d443d7a",
+                "794cc8a7db6022d4"
+            ]
+        ]
+    },
+    {
+        "id": "794cc8a7db6022d4",
+        "type": "bthome",
+        "z": "bc57bc05b329be6f",
+        "name": "",
+        "devices": "{\"aa:bb:cc:dd:ee:ff\":{\"topic\":\"Shelly\"}}",
+        "counterMode": "none",
+        "statusPrefix": "",
+        "eventPrefix": "",
+        "contextVar": "bthome",
+        "contextStore": "none",
+        "batteryState": true,
+        "x": 180,
+        "y": 240,
+        "wires": [
+            [
+                "da58bf1215ff1bd1",
+                "cf535df17fe87c67",
+                "4d8c7139e4142869",
+                "d171379314eb90f3",
+                "8d81812ba5413f1b",
+                "82c0b2658770870f"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "da58bf1215ff1bd1",
+        "type": "debug",
+        "z": "bc57bc05b329be6f",
+        "name": "BTHome",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 420,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "3c0bb5c49d443d7a",
+        "type": "debug",
+        "z": "bc57bc05b329be6f",
+        "name": "Json",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 610,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "3a1a3be0a1016643",
+        "type": "comment",
+        "z": "bc57bc05b329be6f",
+        "name": "{\"addr\":\"aa:bb:cc:dd:ee:ff\",\"data\":[68,0,205,1,99,46,42,58,1,69,220,0],\"rssi\":-39}",
+        "info": "",
+        "x": 400,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "dfd34eac3e53c1ac",
+        "type": "comment",
+        "z": "bc57bc05b329be6f",
+        "name": "{\"battery\":99,\"humidity\":41,\"temperature\":22.5}",
+        "info": "",
+        "x": 690,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "3eda3a0d4e423ea5",
+        "type": "ui-text",
+        "z": "bc57bc05b329be6f",
+        "group": "022986edad5e96ad",
+        "order": 1,
+        "width": 1,
+        "height": "1",
+        "name": "",
+        "label": "Temperature:",
+        "format": "{{msg.payload}}",
+        "layout": "row-left",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#717171",
+        "wrapText": false,
+        "className": "",
+        "value": "payload",
+        "valueType": "msg",
+        "x": 630,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "cf535df17fe87c67",
+        "type": "function",
+        "z": "bc57bc05b329be6f",
+        "name": "Temperature",
+        "func": "var textout = msg.payload.temperature;\nmsg.payload = textout;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 430,
+        "y": 320,
+        "wires": [
+            [
+                "3eda3a0d4e423ea5"
+            ]
+        ]
+    },
+    {
+        "id": "4d8c7139e4142869",
+        "type": "function",
+        "z": "bc57bc05b329be6f",
+        "name": "Chart: Temperature",
+        "func": "const temperature = msg.payload.temperature;\n\nmsg.topic = \"Temperature\";   // Series\nmsg.payload = Number(temperature);\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 560,
+        "wires": [
+            [
+                "87093be825102504"
+            ]
+        ]
+    },
+    {
+        "id": "87093be825102504",
+        "type": "ui-chart",
+        "z": "bc57bc05b329be6f",
+        "group": "022986edad5e96ad",
+        "name": "",
+        "label": "Shelly Blu H&T Data",
+        "order": 4,
+        "chartType": "line",
+        "category": "topic",
+        "categoryType": "msg",
+        "xAxisLabel": "",
+        "xAxisProperty": "",
+        "xAxisPropertyType": "timestamp",
+        "xAxisType": "time",
+        "xAxisFormat": "",
+        "xAxisFormatType": "auto",
+        "xmin": "",
+        "xmax": "",
+        "yAxisLabel": "",
+        "yAxisProperty": "payload",
+        "yAxisPropertyType": "msg",
+        "ymin": "",
+        "ymax": "",
+        "bins": 10,
+        "action": "append",
+        "stackSeries": false,
+        "pointShape": "circle",
+        "pointRadius": 4,
+        "showLegend": true,
+        "removeOlder": 1,
+        "removeOlderUnit": "3600",
+        "removeOlderPoints": "",
+        "colors": [
+            "#0095ff",
+            "#ff0000",
+            "#ff7f0e",
+            "#2ca02c",
+            "#a347e1",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "textColor": [
+            "#666666"
+        ],
+        "textColorDefault": true,
+        "gridColor": [
+            "#e5e5e5"
+        ],
+        "gridColorDefault": true,
+        "width": 6,
+        "height": "5",
+        "className": "",
+        "interpolation": "linear",
+        "x": 660,
+        "y": 560,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d171379314eb90f3",
+        "type": "function",
+        "z": "bc57bc05b329be6f",
+        "name": "Chart: Humidity",
+        "func": "const humidity = msg.payload.humidity;\n\nmsg.topic = \"Humidity\";   // Series\nmsg.payload = Number(humidity);\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 500,
+        "wires": [
+            [
+                "87093be825102504"
+            ]
+        ]
+    },
+    {
+        "id": "79471e93dfb073c9",
+        "type": "ui-button",
+        "z": "bc57bc05b329be6f",
+        "group": "022986edad5e96ad",
+        "name": "Clear Chart",
+        "label": "Delete All",
+        "order": 5,
+        "width": "",
+        "height": "",
+        "emulateClick": false,
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "iconPosition": "left",
+        "payload": "[]",
+        "payloadType": "json",
+        "topic": "Temperatur",
+        "topicType": "str",
+        "buttonColor": "",
+        "textColor": "",
+        "iconColor": "",
+        "enableClick": true,
+        "enablePointerdown": false,
+        "pointerdownPayload": "",
+        "pointerdownPayloadType": "str",
+        "enablePointerup": false,
+        "pointerupPayload": "",
+        "pointerupPayloadType": "str",
+        "x": 430,
+        "y": 620,
+        "wires": [
+            [
+                "87093be825102504"
+            ]
+        ]
+    },
+    {
+        "id": "6386daefed6d9ab8",
+        "type": "ui-text",
+        "z": "bc57bc05b329be6f",
+        "group": "022986edad5e96ad",
+        "order": 3,
+        "width": 1,
+        "height": "1",
+        "name": "",
+        "label": "Battery:",
+        "format": "{{msg.payload}}",
+        "layout": "row-left",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#717171",
+        "wrapText": false,
+        "className": "",
+        "value": "payload",
+        "valueType": "msg",
+        "x": 620,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "8d81812ba5413f1b",
+        "type": "function",
+        "z": "bc57bc05b329be6f",
+        "name": "Battery Level",
+        "func": "var textout = msg.payload.battery;\nmsg.payload = textout;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 430,
+        "y": 440,
+        "wires": [
+            [
+                "6386daefed6d9ab8"
+            ]
+        ]
+    },
+    {
+        "id": "4b57adb03dacfcc6",
+        "type": "ui-text",
+        "z": "bc57bc05b329be6f",
+        "group": "022986edad5e96ad",
+        "order": 2,
+        "width": 1,
+        "height": "1",
+        "name": "",
+        "label": "Humidity:",
+        "format": "{{msg.payload}}",
+        "layout": "row-left",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#717171",
+        "wrapText": false,
+        "className": "",
+        "value": "payload",
+        "valueType": "msg",
+        "x": 620,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "82c0b2658770870f",
+        "type": "function",
+        "z": "bc57bc05b329be6f",
+        "name": "Humidity",
+        "func": "var textout = msg.payload.humidity;\nmsg.payload = textout;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 380,
+        "wires": [
+            [
+                "4b57adb03dacfcc6"
+            ]
+        ]
+    },
+    {
+        "id": "529597358908d69a",
+        "type": "exec",
+        "z": "bc57bc05b329be6f",
+        "command": "Shelly_Data_Reader_Console.exe",
+        "addpay": "",
+        "append": "",
+        "useSpawn": "true",
+        "timer": "",
+        "winHide": false,
+        "oldrc": false,
+        "name": "",
+        "x": 820,
+        "y": 680,
+        "wires": [
+            [],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "ca30cbb5413e5529",
+        "type": "inject",
+        "z": "bc57bc05b329be6f",
+        "name": "On Start",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "1",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 180,
+        "y": 680,
+        "wires": [
+            [
+                "099854720ce4157f"
+            ]
+        ]
+    },
+    {
+        "id": "099854720ce4157f",
+        "type": "exec",
+        "z": "bc57bc05b329be6f",
+        "command": "taskkill /IM Shelly_Data_Reader_Console.exe /F",
+        "addpay": "",
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "winHide": false,
+        "oldrc": false,
+        "name": "",
+        "x": 460,
+        "y": 680,
+        "wires": [
+            [],
+            [],
+            [
+                "529597358908d69a"
+            ]
+        ]
+    },
+    {
+        "id": "61db929d2bd7e1f0",
+        "type": "note",
+        "z": "bc57bc05b329be6f",
+        "name": "",
+        "content": "# Kill any old scanner process\nNote:\nReturns an error at first start, as ther is no old process to kill",
+        "x": 450,
+        "y": 821,
+        "wires": []
+    },
+    {
+        "id": "8c4a32b750e339bd",
+        "type": "comment",
+        "z": "bc57bc05b329be6f",
+        "name": "Execute Scanner Process",
+        "info": "",
+        "x": 810,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "c2951e311b330e67",
+        "type": "comment",
+        "z": "bc57bc05b329be6f",
+        "name": "Insert your device's mac addr",
+        "info": "",
+        "x": 200,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "7d60eb7e4feb15a3",
+        "type": "comment",
+        "z": "bc57bc05b329be6f",
+        "name": "BT Home data from scanner via TCP:",
+        "info": "",
+        "x": 270,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "022986edad5e96ad",
+        "type": "ui-group",
+        "name": "Sensors",
+        "page": "b74bff6a0909f870",
+        "width": 6,
+        "height": 1,
+        "order": 1,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "b74bff6a0909f870",
+        "type": "ui-page",
+        "name": "Sensors",
+        "ui": "559c1995788ce1c4",
+        "path": "/page2",
+        "icon": "home",
+        "layout": "grid",
+        "theme": "4170143216e2de45",
+        "breakpoints": [
+            {
+                "name": "Default",
+                "px": "0",
+                "cols": "3"
+            },
+            {
+                "name": "Tablet",
+                "px": "576",
+                "cols": "6"
+            },
+            {
+                "name": "Small Desktop",
+                "px": "768",
+                "cols": "9"
+            },
+            {
+                "name": "Desktop",
+                "px": "1024",
+                "cols": "12"
+            }
+        ],
+        "order": 1,
+        "className": "",
+        "visible": "true",
+        "disabled": "false"
+    },
+    {
+        "id": "559c1995788ce1c4",
+        "type": "ui-base",
+        "name": "My Dashboard",
+        "path": "/dashboard",
+        "appIcon": "",
+        "includeClientData": true,
+        "acceptsClientConfig": [
+            "ui-notification",
+            "ui-control"
+        ],
+        "showPathInSidebar": false,
+        "headerContent": "page",
+        "navigationStyle": "default",
+        "titleBarStyle": "default",
+        "showReconnectNotification": true,
+        "notificationDisplayTime": 1,
+        "showDisconnectNotification": true,
+        "allowInstall": false
+    },
+    {
+        "id": "4170143216e2de45",
+        "type": "ui-theme",
+        "name": "Default Theme",
+        "colors": {
+            "surface": "#ffffff",
+            "primary": "#0094CE",
+            "bgPage": "#eeeeee",
+            "groupBg": "#ffffff",
+            "groupOutline": "#cccccc"
+        },
+        "sizes": {
+            "density": "default",
+            "pagePadding": "12px",
+            "groupGap": "12px",
+            "groupBorderRadius": "4px",
+            "widgetGap": "12px"
+        }
+    },
+    {
+        "id": "23da13f54479e088",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "@mschaeffler/node-red-bthome": "1.7.1",
+            "@flowfuse/node-red-dashboard": "1.30.2",
+            "node-red-contrib-markdown-note": "1.1.1"
+        }
+    }
+]
