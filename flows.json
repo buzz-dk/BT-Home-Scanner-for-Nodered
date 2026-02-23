@@ -8,6 +8,45 @@
         "env": []
     },
     {
+        "id": "33e88c6f02bcd2ad",
+        "type": "group",
+        "z": "bc57bc05b329be6f",
+        "name": "",
+        "style": {
+            "fill": "#e3f3d3",
+            "label": true
+        },
+        "nodes": [
+            "529597358908d69a",
+            "ca30cbb5413e5529",
+            "099854720ce4157f",
+            "8c4a32b750e339bd",
+            "bf1f9365af5ea86e",
+            "7080a643abd1c054"
+        ],
+        "x": 74,
+        "y": 631.5,
+        "w": 892,
+        "h": 189.5
+    },
+    {
+        "id": "0792962532751e52",
+        "type": "group",
+        "z": "bc57bc05b329be6f",
+        "name": "",
+        "style": {
+            "fill": "#e3f3d3",
+            "label": true
+        },
+        "nodes": [
+            "44ed5a3c17c94107"
+        ],
+        "x": 74,
+        "y": 79,
+        "w": 572,
+        "h": 82
+    },
+    {
         "id": "bbac731dc0c184a8",
         "type": "tcp in",
         "z": "bc57bc05b329be6f",
@@ -21,8 +60,8 @@
         "topic": "",
         "trim": false,
         "tls": "",
-        "x": 240,
-        "y": 160,
+        "x": 200,
+        "y": 240,
         "wires": [
             [
                 "5a79d81c1668c8bf"
@@ -37,8 +76,8 @@
         "property": "payload",
         "action": "",
         "pretty": false,
-        "x": 450,
-        "y": 160,
+        "x": 410,
+        "y": 240,
         "wires": [
             [
                 "3c0bb5c49d443d7a",
@@ -59,7 +98,7 @@
         "contextStore": "none",
         "batteryState": true,
         "x": 180,
-        "y": 240,
+        "y": 320,
         "wires": [
             [
                 "da58bf1215ff1bd1",
@@ -86,7 +125,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 420,
-        "y": 240,
+        "y": 320,
         "wires": []
     },
     {
@@ -102,18 +141,18 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 610,
-        "y": 160,
+        "x": 570,
+        "y": 240,
         "wires": []
     },
     {
         "id": "3a1a3be0a1016643",
         "type": "comment",
         "z": "bc57bc05b329be6f",
-        "name": "{\"addr\":\"aa:bb:cc:dd:ee:ff\",\"data\":[68,0,205,1,99,46,42,58,1,69,220,0],\"rssi\":-39}",
+        "name": "BT Home data from scanner via TCP: {\"addr\":\"aa:bb:cc:dd:ee:ff\",\"data\":[68,0,205,1,99,46,42,58,1,69,220,0],\"rssi\":-39}",
         "info": "",
-        "x": 400,
-        "y": 100,
+        "x": 470,
+        "y": 200,
         "wires": []
     },
     {
@@ -123,7 +162,7 @@
         "name": "{\"battery\":99,\"humidity\":41,\"temperature\":22.5}",
         "info": "",
         "x": 690,
-        "y": 240,
+        "y": 320,
         "wires": []
     },
     {
@@ -147,7 +186,7 @@
         "value": "payload",
         "valueType": "msg",
         "x": 630,
-        "y": 320,
+        "y": 380,
         "wires": []
     },
     {
@@ -163,7 +202,7 @@
         "finalize": "",
         "libs": [],
         "x": 430,
-        "y": 320,
+        "y": 380,
         "wires": [
             [
                 "3eda3a0d4e423ea5"
@@ -183,7 +222,7 @@
         "finalize": "",
         "libs": [],
         "x": 410,
-        "y": 560,
+        "y": 540,
         "wires": [
             [
                 "87093be825102504"
@@ -247,7 +286,7 @@
         "className": "",
         "interpolation": "linear",
         "x": 660,
-        "y": 560,
+        "y": 540,
         "wires": [
             []
         ]
@@ -304,7 +343,7 @@
         "pointerupPayload": "",
         "pointerupPayloadType": "str",
         "x": 430,
-        "y": 620,
+        "y": 580,
         "wires": [
             [
                 "87093be825102504"
@@ -332,7 +371,7 @@
         "value": "payload",
         "valueType": "msg",
         "x": 620,
-        "y": 440,
+        "y": 460,
         "wires": []
     },
     {
@@ -348,7 +387,7 @@
         "finalize": "",
         "libs": [],
         "x": 430,
-        "y": 440,
+        "y": 460,
         "wires": [
             [
                 "6386daefed6d9ab8"
@@ -376,7 +415,7 @@
         "value": "payload",
         "valueType": "msg",
         "x": 620,
-        "y": 380,
+        "y": 420,
         "wires": []
     },
     {
@@ -392,7 +431,7 @@
         "finalize": "",
         "libs": [],
         "x": 440,
-        "y": 380,
+        "y": 420,
         "wires": [
             [
                 "4b57adb03dacfcc6"
@@ -403,6 +442,7 @@
         "id": "529597358908d69a",
         "type": "exec",
         "z": "bc57bc05b329be6f",
+        "g": "33e88c6f02bcd2ad",
         "command": "Shelly_Data_Reader_Console.exe",
         "addpay": "",
         "append": "",
@@ -411,18 +451,20 @@
         "winHide": false,
         "oldrc": false,
         "name": "",
-        "x": 820,
+        "x": 800,
         "y": 680,
         "wires": [
             [],
             [],
             []
-        ]
+        ],
+        "info": "This node starts the scanner.\r\n\r\nIn the .nodered folder it expects an executable by the name:\r\n\r\nShelly_Data_Reader_Console.exe"
     },
     {
         "id": "ca30cbb5413e5529",
         "type": "inject",
         "z": "bc57bc05b329be6f",
+        "g": "33e88c6f02bcd2ad",
         "name": "On Start",
         "props": [
             {
@@ -452,6 +494,7 @@
         "id": "099854720ce4157f",
         "type": "exec",
         "z": "bc57bc05b329be6f",
+        "g": "33e88c6f02bcd2ad",
         "command": "taskkill /IM Shelly_Data_Reader_Console.exe /F",
         "addpay": "",
         "append": "",
@@ -460,7 +503,7 @@
         "winHide": false,
         "oldrc": false,
         "name": "",
-        "x": 460,
+        "x": 440,
         "y": 680,
         "wires": [
             [],
@@ -468,26 +511,18 @@
             [
                 "529597358908d69a"
             ]
-        ]
-    },
-    {
-        "id": "61db929d2bd7e1f0",
-        "type": "note",
-        "z": "bc57bc05b329be6f",
-        "name": "",
-        "content": "# Kill any old scanner process\nNote:\nReturns an error at first start, as ther is no old process to kill",
-        "x": 450,
-        "y": 821,
-        "wires": []
+        ],
+        "info": "This node kills any active scanner (by the name Shelly_Data_Reader_Console).\r\n\r\nOtherwise we would get multiple scanner processes running after any re-deployment."
     },
     {
         "id": "8c4a32b750e339bd",
         "type": "comment",
         "z": "bc57bc05b329be6f",
+        "g": "33e88c6f02bcd2ad",
         "name": "Execute Scanner Process",
         "info": "",
-        "x": 810,
-        "y": 760,
+        "x": 770,
+        "y": 740,
         "wires": []
     },
     {
@@ -496,18 +531,41 @@
         "z": "bc57bc05b329be6f",
         "name": "Insert your device's mac addr",
         "info": "",
-        "x": 200,
-        "y": 300,
+        "x": 220,
+        "y": 380,
         "wires": []
     },
     {
-        "id": "7d60eb7e4feb15a3",
+        "id": "bf1f9365af5ea86e",
         "type": "comment",
         "z": "bc57bc05b329be6f",
-        "name": "BT Home data from scanner via TCP:",
+        "g": "33e88c6f02bcd2ad",
+        "name": "Kill any old scanner process",
         "info": "",
-        "x": 270,
-        "y": 60,
+        "x": 420,
+        "y": 740,
+        "wires": []
+    },
+    {
+        "id": "7080a643abd1c054",
+        "type": "comment",
+        "z": "bc57bc05b329be6f",
+        "g": "33e88c6f02bcd2ad",
+        "name": "Returns an error at first start, as there is no old process to kill",
+        "info": "",
+        "x": 320,
+        "y": 780,
+        "wires": []
+    },
+    {
+        "id": "44ed5a3c17c94107",
+        "type": "comment",
+        "z": "bc57bc05b329be6f",
+        "g": "0792962532751e52",
+        "name": "BT Home (Shelly) Scanner - Windows Only - requires background scanner",
+        "info": "",
+        "x": 360,
+        "y": 120,
         "wires": []
     },
     {
@@ -600,13 +658,12 @@
         }
     },
     {
-        "id": "23da13f54479e088",
+        "id": "5edf0ba354f5a507",
         "type": "global-config",
         "env": [],
         "modules": {
             "@mschaeffler/node-red-bthome": "1.7.1",
-            "@flowfuse/node-red-dashboard": "1.30.2",
-            "node-red-contrib-markdown-note": "1.1.1"
+            "@flowfuse/node-red-dashboard": "1.30.2"
         }
     }
 ]
