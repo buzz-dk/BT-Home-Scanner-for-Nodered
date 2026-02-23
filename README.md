@@ -1,14 +1,14 @@
 # BT-Home-Scanner-for-Nodered (Windows only)
 A Nodered/C++ project for Windows: Scanning for BTHome (Shelly) sensors.
 
-Demonstrates:
+## Demonstrates:
 - Node-red basics
 - The Node-red dashboard with a basic line chart
 - C++ console application with Ble scanner and TCP
 
-Included:
-Example Node-red flow
-A lightweight Windows console application that scans for **Bluetooth Low Energy (BLE)** advertisements in the [BTHome](https://bthome.io/) format, and streams the decoded data to **Node-RED** over TCP in real time.
+## Included:
+- Example Node-red flow
+- A lightweight Windows console application that scans for **Bluetooth Low Energy (BLE)** advertisements in the [BTHome](https://bthome.io/) format, and streams the decoded data to **Node-RED** over TCP in real time.
 
 ![Nodered flow](BTHome-flow.png)
 
@@ -71,6 +71,7 @@ Shelly_Data_Reader_Console.exe [host] [port]
 3. Process the `msg.payload` object (containing `addr`, `data`, and `rssi`) as needed in your flow.
 
 Or import the supplied file: flows.json into Node-red
+
 These nodes need to be in the Node-red pallette:
 - flowfuse/node-red-dashboard
 - mschaeffler/node-red-bthome
