@@ -72,6 +72,60 @@ public:
   bool Connect()
   {
     std::lock_guard<std::mutex> lock(mutex_);
+    return ConnectInternal();
+  }
+
+  void Disconnect()
+  {
+    std::lock_guard<std::mutex> lock(mutex_);
+    CloseSocket();
+  }
+
+  // Send a string. Appends '\n' as the message delimiter for Node-RED "tcp in" node.
+  // Before sending, checks whether the remote end has closed the connection (e.g. after
+  // a Node-RED re-deploy) and reconnects automatically if needed.
+  bool Send(const std::string& message)
+  {
+    std::lock_guard<std::mutex> lock(mutex_);
+
+    // Detect remote close (FIN) that may have arrived since the last send
+    if (sock_ != INVALID_SOCKET && !IsSocketAlive())
+    {
+      std::cerr << "[TCP] Remote end closed connection." << std::endl;
+      CloseSocket();
+    }
+
+    // Auto-reconnect if disconnected
+    if (sock_ == INVALID_SOCKET) {
+      if (!ConnectInternal()) return false;
+      std::cout << "[TCP] Reconnected." << std::endl;
+    }
+
+    std::string data = message + "\n";
+    int sent = send(sock_, data.c_str(), (int)data.size(), 0);
+    if (sent == SOCKET_ERROR) {
+      std::cerr << "[TCP] send() failed (error " << WSAGetLastError() << ")." << std::endl;
+      CloseSocket();
+      return false;
+    }
+    return true;
+  }
+
+  bool IsConnected()
+  {
+    std::lock_guard<std::mutex> lock(mutex_);
+    return sock_ != INVALID_SOCKET;
+  }
+
+private:
+  std::string host_;
+  uint16_t    port_;
+  SOCKET      sock_;
+  std::mutex  mutex_;
+
+  // Must be called with mutex_ held.
+  bool ConnectInternal()
+  {
     if (sock_ != INVALID_SOCKET) return true; // already connected
 
     struct addrinfo hints{}, * result = nullptr;
@@ -89,6 +143,10 @@ public:
       return false;
     }
 
+    // Enable TCP keep-alive so the OS can detect a dead peer even when we are idle
+    BOOL keepAlive = TRUE;
+    setsockopt(sock_, SOL_SOCKET, SO_KEEPALIVE, (const char*)&keepAlive, sizeof(keepAlive));
+
     if (connect(sock_, result->ai_addr, (int)result->ai_addrlen) == SOCKET_ERROR) {
       closesocket(sock_);
       sock_ = INVALID_SOCKET;
@@ -100,52 +158,45 @@ public:
     return true;
   }
 
-  void Disconnect()
+  // Must be called with mutex_ held.
+  void CloseSocket()
   {
-    std::lock_guard<std::mutex> lock(mutex_);
     if (sock_ != INVALID_SOCKET) {
-      shutdown(sock_, SD_SEND);
+      shutdown(sock_, SD_BOTH);
       closesocket(sock_);
       sock_ = INVALID_SOCKET;
     }
   }
 
-  // Send a string. Appends '\n' as the message delimiter for Node-RED "tcp in" node.
-  // Returns true on success. On failure the socket is closed so the next call to
-  // Send (or an explicit Connect) will attempt to reconnect.
-  bool Send(const std::string& message)
+  // Non-blocking check whether the remote end has sent a FIN (graceful close).
+  // Uses select() + recv(MSG_PEEK) so no data is consumed.
+  // Must be called with mutex_ held.
+  bool IsSocketAlive()
   {
-    std::lock_guard<std::mutex> lock(mutex_);
+    if (sock_ == INVALID_SOCKET) return false;
 
-    // Auto-reconnect if disconnected
-    if (sock_ == INVALID_SOCKET) {
-      mutex_.unlock();          // unlock before Connect re-locks
-      bool ok = Connect();
-      mutex_.lock();
-      if (!ok) return false;
-    }
+    fd_set readfds;
+    FD_ZERO(&readfds);
+    FD_SET(sock_, &readfds);
 
-    std::string data = message + "\n";
-    int sent = send(sock_, data.c_str(), (int)data.size(), 0);
-    if (sent == SOCKET_ERROR) {
-      closesocket(sock_);
-      sock_ = INVALID_SOCKET;
-      return false;
+    timeval tv{};           // zero timeout → non-blocking poll
+    int sel = select(0, &readfds, nullptr, nullptr, &tv);
+
+    if (sel > 0)
+    {
+      // Socket is readable: either unexpected incoming data, or a FIN arrived
+      char buf;
+      int r = recv(sock_, &buf, 1, MSG_PEEK);
+      if (r == 0) return false;   // FIN – remote closed gracefully
+      if (r < 0)  return false;   // error
     }
+    else if (sel < 0)
+    {
+      return false;               // select() error
+    }
+    // sel == 0: nothing pending → connection still alive
     return true;
   }
-
-  bool IsConnected()
-  {
-    std::lock_guard<std::mutex> lock(mutex_);
-    return sock_ != INVALID_SOCKET;
-  }
-
-private:
-  std::string host_;
-  uint16_t    port_;
-  SOCKET      sock_;
-  std::mutex  mutex_;
 };
 
 // Global TCP client instance (set up in main before scanner starts)
