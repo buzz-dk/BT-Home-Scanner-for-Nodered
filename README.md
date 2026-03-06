@@ -70,7 +70,9 @@ Shelly_Data_Reader_Console.exe [host] [port]
 2. Connect it to a **json** node to parse the incoming messages into JavaScript objects.
 3. Process the `msg.payload` object (containing `addr`, `data`, and `rssi`) as needed in your flow.
 
-Or import the supplied file: flows.json into Node-red
+Or import the supplied file: flows.json into Node-red.
+
+**Important:** Insert your device's mac address into the BTHome node.
 
 These nodes need to be in the Node-red pallette:
 - flowfuse/node-red-dashboard
